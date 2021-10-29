@@ -1,0 +1,18 @@
+[
+  {
+    "platform": "MOBILE",
+    "url": "http://127.0.0.1:4723/wd/hub",
+    "desiredCapabilities": {
+      "automationName": "UiAutomator2",
+      "platformName": "Android",
+      "uuid": "emulator-5554",
+      "appPackage": "com.google.android.youtube",
+      "appActivity": "com.google.android.apps.youtube.app.WatchWhileActivity"
+    }
+  },
+  {
+    "platform": "WEB",
+    "location": "LOCAL",
+    "browser": "CHROME"
+  }
+]
