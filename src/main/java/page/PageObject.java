@@ -1,97 +1,53 @@
 package page;
 
+import io.appium.java_client.AppiumDriver;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.openqa.selenium.WebDriver;
+import util.CurrentThreadDriver;
 
 @Slf4j
 public class PageObject {
-    WebDriver driver;
+    protected String baseURL;
 
-    public PageObject(WebDriver driver) {
-        this.driver = driver;
+    public PageObject() {}
+
+    public void openPage() {
+        if (isCurrentPlatformWeb())
+            getWebDriver().get(baseURL);
+        else
+            log.debug("openPage method is not executed because it currently runs at Mobile.");
+
     }
 
-    public void openPageAt(String url) {
-        driver.get(url);
+    public void openPage(String url) {
+        if (isCurrentPlatformWeb())
+            getWebDriver().get(url);
+        else
+            log.debug("openPage method is not executed because it currently runs at Mobile.");
     }
 
-    public String getCurrentUrl() {
-        return driver.getCurrentUrl();
-    }
 
-    public WebElement getElementAfterClickable(String element) {
-        WebDriverWait wait = new WebDriverWait(driver, 30);
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(element)));
-        return getElement(element);
-    }
-
-    public List<WebElement> getElementsAfterClickable(String elements) {
-        WebDriverWait wait = new WebDriverWait(driver, 30);
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(elements)));
-        return getElements(elements);
-    }
-
-    public WebElement getElement(String element) {
-        return driver.findElement(By.xpath(element));
-    }
-
-    public boolean doesElementExist(String element) {
+    public void waitFor(long seconds) {
         try {
-            driver.findElement(By.xpath(element));
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
+            Thread.sleep(seconds * 1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
-    public List<WebElement> getElements(String elements) {
-        return driver.findElements(By.xpath(elements));
+    protected WebDriver getWebDriver() {
+        return CurrentThreadDriver.getWebDriver();
     }
 
-    public void clickElementAfterClickable(String element) {
-        getElementAfterClickable(element).click();
+    protected AppiumDriver getMobileDriver() {
+        return CurrentThreadDriver.getMobileDriver();
     }
 
-    public void clickElementAt(String elements, int index) {
-        getElements(elements).get(index).click();
+    protected boolean isCurrentPlatformWeb() {
+        return CurrentThreadDriver.isCurrentPlatformWeb();
     }
 
-    public void typeInput(String element, String input, Keys keysInput) {
-        WebElement foundElement = getElement(element);
-
-        foundElement.clear();
-
-        foundElement.sendKeys(input, keysInput);
-    }
-
-    public String getTextFromClickableElement(String element) {
-        return getElementAfterClickable(element).getText();
-    }
-
-    public List<String> getTextFromClickableElements(String elements) {
-        List<String> texts = new ArrayList<>();
-
-        for (WebElement element : getElementsAfterClickable(elements))
-            texts.add(element.getText());
-
-        return texts;
-    }
-
-    public String getTextFromClickableElement(WebElement element) {
-        return element.getText();
-    }
-
-    public void waitForElementToStale(String element) {
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, 5);
-            wait.until(ExpectedConditions.stalenessOf(getElement(element)));
-        } catch (NoSuchElementException exception) {
-            log.info("Staling element was not found. Trying to continue executing the test steps.");
-        }
+    protected boolean isCurrentPlatformMobile() {
+        return CurrentThreadDriver.isCurrentPlatformMobile();
     }
 }

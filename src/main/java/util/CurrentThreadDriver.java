@@ -5,19 +5,16 @@ import io.appium.java_client.AppiumDriver;
 import lombok.extern.java.Log;
 import org.openqa.selenium.WebDriver;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Log
 public class CurrentThreadDriver {
-    private static ConcurrentHashMap<Long, CurrentThreadDriver> DRIVER_MAP;
-    private final DriverConfiguration driverConfiguration;
-    private WebDriver driver;
+    private static ConcurrentHashMap<Long, ThreadDriver> DRIVER_MAP;
+    private static List<ThreadDriver> UNASSIGNED_DRIVERS;
 
-    private CurrentThreadDriver(DriverConfiguration driverConfiguration) {
-        this.driverConfiguration = driverConfiguration;
-    }
-
-    private static CurrentThreadDriver getInstance() {
+    public static ThreadDriver getCurrentInstance() {
         return DRIVER_MAP.get(getCurrentThreadID());
     }
 
@@ -26,38 +23,48 @@ public class CurrentThreadDriver {
     }
 
     public static WebDriver getWebDriver() {
-        return getInstance().driver;
+        return getCurrentInstance().getDriver();
     }
 
     public static AppiumDriver getMobileDriver() {
         return (AppiumDriver) getWebDriver();
     }
 
-    public static void initializeDriver(DriverConfiguration driverConfiguration) {
-        if (DRIVER_MAP == null)
-            DRIVER_MAP = new ConcurrentHashMap<>();
+    public static void initializeDriverForCurrentThread() {
+        if (DRIVER_MAP.get(getCurrentThreadID()) != null)
+            log.info(String.format("Thread %s already has an assigned driver.", Thread.currentThread().getId()));
 
+        else {
+            if (UNASSIGNED_DRIVERS.size() == 0)
+                throw new RuntimeException("No unassigned driver found.");
 
-        if (DRIVER_MAP.containsKey(getCurrentThreadID())) {
-            log.warning(String.format("Driver for thread %s has already been initialized and would not be reinitialized.", getCurrentThreadID()));
+            ThreadDriver threadDriver = UNASSIGNED_DRIVERS.get(0);
+            threadDriver.initializeDriver();
 
-        } else {
-            CurrentThreadDriver currentThreadDriver = new CurrentThreadDriver(driverConfiguration);
-
-            PlatformConstant currentPlatform = PlatformConstant.valueOf(driverConfiguration.getPlatform());
-
-            switch (currentPlatform) {
-                case WEB:
-                    currentThreadDriver.driver = DriverFactory.createWebDriver(driverConfiguration);
-                    break;
-
-                case MOBILE:
-                    currentThreadDriver.driver = DriverFactory.createMobileDriver(driverConfiguration);
-                    break;
-            }
-
-            DRIVER_MAP.put(getCurrentThreadID(), currentThreadDriver);
+            DRIVER_MAP.put(getCurrentThreadID(), threadDriver);
+            UNASSIGNED_DRIVERS.remove(0);
         }
+    }
+
+    public static void destroyDriverForCurrentThread() {
+        if (DRIVER_MAP.get(getCurrentThreadID()) != null) {
+            ThreadDriver threadDriver = DRIVER_MAP.get(getCurrentThreadID());
+            threadDriver.destroyDriver();
+
+            UNASSIGNED_DRIVERS.add(threadDriver);
+
+            DRIVER_MAP.remove(getCurrentThreadID());
+        }
+    }
+
+    public static void readConfigurations(List<DriverConfiguration> driverConfigurations) {
+        DRIVER_MAP = new ConcurrentHashMap<>();
+        UNASSIGNED_DRIVERS = new ArrayList<>();
+
+        driverConfigurations.forEach(currentConfig -> {
+            ThreadDriver threadDriver = new ThreadDriver(currentConfig);
+            UNASSIGNED_DRIVERS.add(threadDriver);
+        });
     }
 
     public static boolean isCurrentPlatformWeb() {
@@ -69,6 +76,6 @@ public class CurrentThreadDriver {
     }
 
     public static PlatformConstant getCurrentPlatform() {
-        return PlatformConstant.valueOf(getInstance().driverConfiguration.getPlatform());
+        return PlatformConstant.valueOf(getCurrentInstance().getDriverConfiguration().getPlatform());
     }
 }
