@@ -6,7 +6,11 @@
 
     <groupId>com.github.ubaifadhli</groupId>
     <artifactId>tetikus-core</artifactId>
-    <version>0.1.1</version>
+    <packaging>jar</packaging>
+    <version>0.1.2g</version>
+
+    <name>Tetikus Test Library</name>
+    <description>A test library that focuses on multiplatform parallel test.</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
