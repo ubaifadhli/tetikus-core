@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface MobileLocator {
     String xpath() default "";
     String id() default "";
+    String accessibilityID() default "";
 }

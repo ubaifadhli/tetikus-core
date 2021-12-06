@@ -73,6 +73,16 @@ public class TetikusInjector {
                     Element.ElementBuilder builder = Element.builder();
 
                     if (locator != null) {
+                        if (locator.id().length() > 0) {
+                            builder.webLocator(By.id(locator.id()));
+                            builder.mobileLocator(MobileBy.id(locator.id()));
+                        }
+
+                        if (locator.xpath().length() > 0) {
+                            builder.webLocator(By.xpath(locator.xpath()));
+                            builder.mobileLocator(MobileBy.xpath(locator.xpath()));
+                        }
+
                         if (locator.webID().length() > 0)
                             builder.webLocator(By.id(locator.webID()));
 
@@ -80,10 +90,13 @@ public class TetikusInjector {
                             builder.webLocator(By.xpath(locator.webXPath()));
 
                         if (locator.mobileID().length() > 0)
-                            builder.mobileLocator(MobileBy.AccessibilityId(locator.mobileID()));
+                            builder.mobileLocator(MobileBy.id(locator.mobileID()));
 
                         if (locator.mobileXPath().length() > 0)
                             builder.mobileLocator(MobileBy.xpath(locator.mobileXPath()));
+
+                        if (locator.mobileAccessibilityID().length() > 0)
+                            builder.mobileLocator(MobileBy.AccessibilityId(locator.mobileAccessibilityID()));
                     }
 
                     if (webLocator != null) {
@@ -100,6 +113,9 @@ public class TetikusInjector {
 
                         if (mobileLocator.xpath().length() > 0)
                             builder.mobileLocator(By.xpath(mobileLocator.xpath()));
+
+                        if (mobileLocator.accessibilityID().length() > 0)
+                            builder.mobileLocator(MobileBy.AccessibilityId(mobileLocator.accessibilityID()));
                     }
 
                     Element createdElement = builder.build();
