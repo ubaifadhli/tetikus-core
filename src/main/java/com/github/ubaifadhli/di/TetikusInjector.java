@@ -4,7 +4,7 @@ import com.github.ubaifadhli.annotations.BaseURL;
 import com.github.ubaifadhli.annotations.Locator;
 import com.github.ubaifadhli.annotations.MobileLocator;
 import com.github.ubaifadhli.annotations.WebLocator;
-import com.github.ubaifadhli.page.PageObject;
+import com.github.ubaifadhli.pages.PageObject;
 import io.appium.java_client.MobileBy;
 import org.openqa.selenium.By;
 import com.github.ubaifadhli.util.Element;
@@ -18,9 +18,6 @@ public class TetikusInjector {
         List<Field> currentObjectFields = Arrays.asList(currentObject.getClass().getDeclaredFields());
 
         currentObjectFields.forEach(field -> {
-            System.out.println(field.getName());
-            System.out.println(field.getType());
-
             if (field.getType().getSuperclass() == PageObject.class) {
                 BaseURL baseURL = field.getType().getAnnotation(BaseURL.class);
 

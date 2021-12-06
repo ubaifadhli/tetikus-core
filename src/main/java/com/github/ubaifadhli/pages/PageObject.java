@@ -1,4 +1,4 @@
-package com.github.ubaifadhli.page;
+package com.github.ubaifadhli.pages;
 
 import io.appium.java_client.AppiumDriver;
 import lombok.extern.slf4j.Slf4j;

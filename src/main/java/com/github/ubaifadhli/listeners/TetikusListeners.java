@@ -1,4 +1,4 @@
-package com.github.ubaifadhli.listener;
+package com.github.ubaifadhli.listeners;
 
 import com.github.ubaifadhli.util.CurrentThreadDriver;
 import com.github.ubaifadhli.util.DriverConfiguration;
@@ -10,7 +10,7 @@ import org.testng.xml.XmlSuite;
 import java.util.List;
 
 @Slf4j
-public class TetikusListeners implements ISuiteListener, IInvokedMethodListener, IExecutionListener {
+public class TetikusListeners implements ISuiteListener, IInvokedMethodListener {
     @Override
     public void onStart(ISuite suite) {
         int driverConfigurationsCount = DriverConfigurationHelper.getDriverConfigurationsCount();
@@ -27,7 +27,7 @@ public class TetikusListeners implements ISuiteListener, IInvokedMethodListener,
             method.setThreadPoolSize(driverConfigurationsCount);
         });
 
-        // TODO Initialize drivers
+        // Store driver configurations to List, so those could be initialized by IInvokedMethodListener.
         List<DriverConfiguration> driverConfigurations = DriverConfigurationHelper.getDriverConfigurations();
         CurrentThreadDriver.readConfigurations(driverConfigurations);
     }
@@ -35,7 +35,6 @@ public class TetikusListeners implements ISuiteListener, IInvokedMethodListener,
     @Override
     public void beforeInvocation(IInvokedMethod method, ITestResult testResult, ITestContext context) {
         CurrentThreadDriver.initializeDriverForCurrentThread();
-        System.out.println("init : " + Thread.currentThread().getId());
     }
 
     @Override

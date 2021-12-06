@@ -35,36 +35,44 @@ public class CurrentThreadDriver {
             log.info(String.format("Thread %s already has an assigned driver.", Thread.currentThread().getId()));
 
         else {
-            if (UNASSIGNED_DRIVERS.size() == 0)
-                throw new RuntimeException("No unassigned driver found.");
+            synchronized (CurrentThreadDriver.class) {
+                try {
+                    if (UNASSIGNED_DRIVERS.size() == 0)
+                        throw new RuntimeException("No unassigned driver found.");
 
-            ThreadDriver threadDriver = UNASSIGNED_DRIVERS.get(0);
-            threadDriver.initializeDriver();
+                    ThreadDriver threadDriver = UNASSIGNED_DRIVERS.get(0);
+                    threadDriver.initializeDriver();
 
-            DRIVER_MAP.put(getCurrentThreadID(), threadDriver);
-            UNASSIGNED_DRIVERS.remove(0);
+                    DRIVER_MAP.put(getCurrentThreadID(), threadDriver);
+
+                } finally {
+                    UNASSIGNED_DRIVERS.remove(0);
+                }
+            }
         }
     }
 
     public static void destroyDriverForCurrentThread() {
         if (DRIVER_MAP.get(getCurrentThreadID()) != null) {
-            ThreadDriver threadDriver = DRIVER_MAP.get(getCurrentThreadID());
-            threadDriver.destroyDriver();
+            synchronized (CurrentThreadDriver.class) {
+                ThreadDriver threadDriver = DRIVER_MAP.get(getCurrentThreadID());
+                threadDriver.destroyDriver();
 
-            UNASSIGNED_DRIVERS.add(threadDriver);
+                UNASSIGNED_DRIVERS.add(threadDriver);
 
-            DRIVER_MAP.remove(getCurrentThreadID());
+                DRIVER_MAP.remove(getCurrentThreadID());
+            }
         }
     }
 
+    // No need for synchronization because in this phase the runner still runs as single thread.
     public static void readConfigurations(List<DriverConfiguration> driverConfigurations) {
         DRIVER_MAP = new ConcurrentHashMap<>();
         UNASSIGNED_DRIVERS = new ArrayList<>();
 
-        driverConfigurations.forEach(currentConfig -> {
-            ThreadDriver threadDriver = new ThreadDriver(currentConfig);
-            UNASSIGNED_DRIVERS.add(threadDriver);
-        });
+        driverConfigurations.stream()
+                .map(ThreadDriver::new)
+                .forEach(UNASSIGNED_DRIVERS::add);
     }
 
     public static boolean isCurrentPlatformWeb() {

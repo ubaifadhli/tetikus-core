@@ -1,7 +1,7 @@
-package com.github.ubaifadhli.runner;
+package com.github.ubaifadhli.runners;
 
 import com.github.ubaifadhli.di.TetikusObjectFactory;
-import com.github.ubaifadhli.listener.TetikusListeners;
+import com.github.ubaifadhli.listeners.TetikusListeners;
 import org.testng.IObjectFactory;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.ObjectFactory;
