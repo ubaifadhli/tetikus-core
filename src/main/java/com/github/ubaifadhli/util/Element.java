@@ -15,6 +15,8 @@ import java.time.Duration;
 
 @Builder
 public class Element {
+    private long DEFAULT_WAIT_DURATION = 30L;
+
     private By webLocator;
     private By mobileLocator;
 
@@ -30,73 +32,88 @@ public class Element {
     }
 
     public void click() {
-        if (isCurrentPlatformWeb()) {
+        if (validToRunOnWeb()) {
             if (webElement == null)
                 webElement = getWebDriver().findElement(webLocator);
 
             webElement.click();
 
-        } else {
+        } else if (validToRunOnMobile()){
             if (mobileElement == null)
                 mobileElement = getMobileDriver().findElement(mobileLocator);
 
             mobileElement.click();
+
+        } else {
+            throw new RuntimeException("Element did not run on any platform because locator has not been set up.");
         }
     }
 
     public void typeIntoField(String text) {
-        if (isCurrentPlatformWeb()) {
+        if (validToRunOnWeb()) {
             if (webElement == null)
                 webElement = getWebDriver().findElement(webLocator);
 
             webElement.sendKeys(text);
 
-        } else {
+        } else if (validToRunOnMobile()){
             if (mobileElement == null)
                 mobileElement = getMobileDriver().findElement(mobileLocator);
 
             mobileElement.sendKeys(text);
+
+        } else {
+            throw new RuntimeException("Element did not run on any platform because locator has not been set up.");
         }
     }
 
     public Element waitUntilClickable() {
-        if (isCurrentPlatformWeb()) {
-            WebDriverWait webDriverWait = new WebDriverWait(getWebDriver(), 30);
+        if (validToRunOnWeb()) {
+            WebDriverWait webDriverWait = new WebDriverWait(getWebDriver(), DEFAULT_WAIT_DURATION);
             webElement = webDriverWait.until(ExpectedConditions.elementToBeClickable(webLocator));
 
-        } else {
-            WebDriverWait webDriverWait = new WebDriverWait(getMobileDriver(), 30);
+        } else if (validToRunOnMobile()){
+            WebDriverWait webDriverWait = new WebDriverWait(getMobileDriver(), DEFAULT_WAIT_DURATION);
             mobileElement = webDriverWait.until(ExpectedConditions.elementToBeClickable(mobileLocator));
+
+        } else {
+            throw new RuntimeException("Element did not run on any platform because locator has not been set up.");
         }
 
         return this;
     }
 
     public Element waitUntilVisible() {
-        if (isCurrentPlatformWeb()) {
-            WebDriverWait webDriverWait = new WebDriverWait(getWebDriver(), 30);
+        if (validToRunOnWeb()) {
+            WebDriverWait webDriverWait = new WebDriverWait(getWebDriver(), DEFAULT_WAIT_DURATION);
             webElement = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(webLocator));
 
-        } else {
-            WebDriverWait webDriverWait = new WebDriverWait(getMobileDriver(), 30);
+        } else if (validToRunOnMobile()){
+            WebDriverWait webDriverWait = new WebDriverWait(getMobileDriver(), DEFAULT_WAIT_DURATION);
             mobileElement = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(mobileLocator));
+
+        } else {
+            throw new RuntimeException("Element did not run on any platform because locator has not been set up.");
         }
 
         return this;
     }
 
     public String getText() {
-        if (isCurrentPlatformWeb()) {
+        if (validToRunOnWeb()) {
             if (webElement == null)
                 webElement = getWebDriver().findElement(webLocator);
 
             return webElement.getText();
 
-        } else {
+        } else if (validToRunOnMobile()){
             if (mobileElement == null)
                 mobileElement = getMobileDriver().findElement(mobileLocator);
 
             return mobileElement.getText();
+
+        } else {
+            throw new RuntimeException("Element did not run on any platform because locator has not been set up.");
         }
     }
 
@@ -110,6 +127,14 @@ public class Element {
 
     private boolean isCurrentPlatformWeb() {
         return CurrentThreadDriver.isCurrentPlatformWeb();
+    }
+
+    private boolean validToRunOnWeb() {
+        return CurrentThreadDriver.isCurrentPlatformWeb() && webLocator != null;
+    }
+
+    private boolean validToRunOnMobile() {
+        return CurrentThreadDriver.isCurrentPlatformMobile() && mobileLocator != null;
     }
 }
 
