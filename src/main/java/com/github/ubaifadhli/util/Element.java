@@ -15,7 +15,7 @@ import java.time.Duration;
 
 @Builder
 public class Element {
-    private long DEFAULT_WAIT_DURATION = 30L;
+    private final long DEFAULT_WAIT_DURATION = 30;
 
     private By webLocator;
     private By mobileLocator;
