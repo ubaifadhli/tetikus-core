@@ -38,14 +38,12 @@ public class Element {
 
             webElement.click();
 
-        } else if (validToRunOnMobile()){
+        } else if (validToRunOnMobile()) {
             if (mobileElement == null)
                 mobileElement = getMobileDriver().findElement(mobileLocator);
 
             mobileElement.click();
 
-        } else {
-            throw new RuntimeException("Element did not run on any platform because locator has not been set up.");
         }
     }
 
@@ -56,14 +54,12 @@ public class Element {
 
             webElement.sendKeys(text);
 
-        } else if (validToRunOnMobile()){
+        } else if (validToRunOnMobile()) {
             if (mobileElement == null)
                 mobileElement = getMobileDriver().findElement(mobileLocator);
 
             mobileElement.sendKeys(text);
 
-        } else {
-            throw new RuntimeException("Element did not run on any platform because locator has not been set up.");
         }
     }
 
@@ -72,12 +68,10 @@ public class Element {
             WebDriverWait webDriverWait = new WebDriverWait(getWebDriver(), DEFAULT_WAIT_DURATION);
             webElement = webDriverWait.until(ExpectedConditions.elementToBeClickable(webLocator));
 
-        } else if (validToRunOnMobile()){
+        } else if (validToRunOnMobile()) {
             WebDriverWait webDriverWait = new WebDriverWait(getMobileDriver(), DEFAULT_WAIT_DURATION);
             mobileElement = webDriverWait.until(ExpectedConditions.elementToBeClickable(mobileLocator));
 
-        } else {
-            throw new RuntimeException("Element did not run on any platform because locator has not been set up.");
         }
 
         return this;
@@ -88,12 +82,10 @@ public class Element {
             WebDriverWait webDriverWait = new WebDriverWait(getWebDriver(), DEFAULT_WAIT_DURATION);
             webElement = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(webLocator));
 
-        } else if (validToRunOnMobile()){
+        } else if (validToRunOnMobile()) {
             WebDriverWait webDriverWait = new WebDriverWait(getMobileDriver(), DEFAULT_WAIT_DURATION);
             mobileElement = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(mobileLocator));
 
-        } else {
-            throw new RuntimeException("Element did not run on any platform because locator has not been set up.");
         }
 
         return this;
@@ -106,7 +98,7 @@ public class Element {
 
             return webElement.getText();
 
-        } else if (validToRunOnMobile()){
+        } else if (validToRunOnMobile()) {
             if (mobileElement == null)
                 mobileElement = getMobileDriver().findElement(mobileLocator);
 
