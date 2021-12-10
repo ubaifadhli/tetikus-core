@@ -2,6 +2,9 @@ package com.github.ubaifadhli.util;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 import lombok.Builder;
@@ -147,6 +150,18 @@ class MobileElementFunction {
 
     public MobileElementFunction(AppiumDriver driver) {
         this.driver = driver;
+    }
+
+    private AndroidDriver asAndroidDriver() {
+        return ((AndroidDriver) driver);
+    }
+
+    public void pressEnter() {
+        asAndroidDriver().pressKey(new KeyEvent(AndroidKey.ENTER));
+    }
+
+    public void goBack() {
+        asAndroidDriver().pressKey(new KeyEvent(AndroidKey.BACK));
     }
 
     public void swipeUp(int swipeUpPercentage) {
