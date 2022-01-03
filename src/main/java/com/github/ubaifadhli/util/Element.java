@@ -1,20 +1,16 @@
 package com.github.ubaifadhli.util;
 
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
-import io.appium.java_client.touch.WaitOptions;
-import io.appium.java_client.touch.offset.PointOption;
 import lombok.Builder;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
 
 @Builder
 public class Element {
@@ -48,6 +44,13 @@ public class Element {
             mobileElement.click();
 
         }
+    }
+
+    public void pressEnter() {
+        if (validToRunOnWeb())
+            webElement.sendKeys(Keys.ENTER);
+        else
+            new MobileElementFunction(getMobileDriver()).pressEnter();
     }
 
     public void typeIntoField(String text) {
@@ -94,6 +97,23 @@ public class Element {
         return this;
     }
 
+    public void typeAndEnter(String text) {
+        if (validToRunOnWeb()) {
+            if (webElement == null)
+                webElement = getWebDriver().findElement(webLocator);
+
+            webElement.sendKeys(text);
+            webElement.sendKeys(Keys.ENTER);
+
+        } else if (validToRunOnMobile()) {
+            if (mobileElement == null)
+                mobileElement = getMobileDriver().findElement(mobileLocator);
+
+            mobileElement.sendKeys(text);
+            ((AndroidDriver) getMobileDriver()).pressKey(new KeyEvent(AndroidKey.ENTER));
+        }
+    }
+
     public String getText() {
         if (validToRunOnWeb()) {
             if (webElement == null)
@@ -133,53 +153,4 @@ public class Element {
     }
 }
 
-class WebElementFunction {
-    private WebDriver driver;
 
-    public WebElementFunction(WebDriver driver) {
-        this.driver = driver;
-    }
-
-    public String getCurrentURL() {
-        return driver.getCurrentUrl();
-    }
-}
-
-class MobileElementFunction {
-    private AppiumDriver driver;
-
-    public MobileElementFunction(AppiumDriver driver) {
-        this.driver = driver;
-    }
-
-    private AndroidDriver asAndroidDriver() {
-        return ((AndroidDriver) driver);
-    }
-
-    public void pressEnter() {
-        asAndroidDriver().pressKey(new KeyEvent(AndroidKey.ENTER));
-    }
-
-    public void goBack() {
-        asAndroidDriver().pressKey(new KeyEvent(AndroidKey.BACK));
-    }
-
-    public void swipeUp(int swipeUpPercentage) {
-        int deviceMiddleY = driver.manage().window().getSize().getHeight() / 2;
-        int deviceMiddleX = driver.manage().window().getSize().getWidth() / 2;
-
-        if (swipeUpPercentage < 0 || swipeUpPercentage > 100)
-            throw new RuntimeException("ScrollDownPercentage should be ranged from 0 to 100.");
-
-        // The lowest value for this coordinate is 0, which means that it will swipe up to the top of the screen.
-        int deviceEndScrollY = (int) (deviceMiddleY * (double) (100 - swipeUpPercentage) / 100);
-
-        TouchAction touchAction = new TouchAction(driver);
-
-        touchAction.press(PointOption.point(deviceMiddleX, deviceMiddleY))
-                .waitAction(WaitOptions.waitOptions(Duration.ofSeconds(1))) // IDK why but it wont work without this.
-                .moveTo(PointOption.point(deviceMiddleX, deviceEndScrollY))
-                .release()
-                .perform();
-    }
-}
