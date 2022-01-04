@@ -5,10 +5,7 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 import lombok.Builder;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -18,6 +15,7 @@ public class Element {
 
     private By webLocator;
     private By mobileLocator;
+    private int[] mobileCoordinate;
 
     private WebElement webElement;
     private WebElement mobileElement;
@@ -36,14 +34,25 @@ public class Element {
                 webElement = getWebDriver().findElement(webLocator);
 
             webElement.click();
+            webElement = null;
 
         } else if (validToRunOnMobile()) {
-            if (mobileElement == null)
-                mobileElement = getMobileDriver().findElement(mobileLocator);
+            if (mobileUseCoordinate()) {
+                forMobile().tap(mobileCoordinate[0], mobileCoordinate[1]);
 
-            mobileElement.click();
+            } else {
+                if (mobileElement == null)
+                    mobileElement = getMobileDriver().findElement(mobileLocator);
+
+                mobileElement.click();
+                mobileElement = null;
+            }
 
         }
+    }
+
+    private boolean mobileUseCoordinate() {
+        return mobileCoordinate != null;
     }
 
     public void pressEnter() {
@@ -51,6 +60,24 @@ public class Element {
             webElement.sendKeys(Keys.ENTER);
         else
             new MobileElementFunction(getMobileDriver()).pressEnter();
+    }
+
+    public void clearAndType(String text) {
+        if (validToRunOnWeb()) {
+            if (webElement == null)
+                webElement = getWebDriver().findElement(webLocator);
+
+            webElement.clear();
+            webElement.sendKeys(text);
+
+        } else if (validToRunOnMobile()) {
+            if (mobileElement == null)
+                mobileElement = getMobileDriver().findElement(mobileLocator);
+
+            mobileElement.clear();
+            mobileElement.sendKeys(text);
+
+        }
     }
 
     public void typeIntoField(String text) {

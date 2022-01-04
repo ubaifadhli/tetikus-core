@@ -11,4 +11,5 @@ public @interface MobileLocator {
     String xpath() default "";
     String id() default "";
     String accessibilityID() default "";
+    int[] coordinate() default -1;
 }

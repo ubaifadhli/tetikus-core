@@ -94,6 +94,9 @@ public class TetikusInjector {
 
                         if (locator.mobileAccessibilityID().length() > 0)
                             builder.mobileLocator(MobileBy.AccessibilityId(locator.mobileAccessibilityID()));
+
+                        if (locator.mobileCoordinate().length > 1)
+                            builder.mobileCoordinate(locator.mobileCoordinate());
                     }
 
                     if (webLocator != null) {
@@ -113,6 +116,9 @@ public class TetikusInjector {
 
                         if (mobileLocator.accessibilityID().length() > 0)
                             builder.mobileLocator(MobileBy.AccessibilityId(mobileLocator.accessibilityID()));
+
+                        if (mobileLocator.coordinate().length > 1)
+                            builder.mobileCoordinate(mobileLocator.coordinate());
                     }
 
                     Element createdElement = builder.build();

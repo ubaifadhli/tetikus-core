@@ -29,6 +29,14 @@ public class MobileElementFunction {
         asAndroidDriver().pressKey(new KeyEvent(AndroidKey.BACK));
     }
 
+    public void tap(int xCoordinate, int yCoordinate) {
+        TouchAction touchAction = new TouchAction(driver);
+
+        touchAction.tap(PointOption.point(xCoordinate, yCoordinate))
+                .release()
+                .perform();
+    }
+
     public void swipe(int swipeUpPercentage, SwipeDirection swipeDirection) {
         int deviceMiddleY = driver.manage().window().getSize().getHeight() / 2;
         int deviceMiddleX = driver.manage().window().getSize().getWidth() / 2;

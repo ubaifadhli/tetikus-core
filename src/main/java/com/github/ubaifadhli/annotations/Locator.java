@@ -20,4 +20,5 @@ public @interface Locator {
     String mobileXPath() default "";
     String mobileID() default "";
     String mobileAccessibilityID() default "";
+    int[] mobileCoordinate() default -1;
 }
