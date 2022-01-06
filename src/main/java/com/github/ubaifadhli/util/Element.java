@@ -62,6 +62,22 @@ public class Element {
             new MobileElementFunction(getMobileDriver()).pressEnter();
     }
 
+    public void clear() {
+        if (validToRunOnWeb()) {
+            if (webElement == null)
+                webElement = getWebDriver().findElement(webLocator);
+
+            webElement.clear();
+
+        } else if (validToRunOnMobile()) {
+            if (mobileElement == null)
+                mobileElement = getMobileDriver().findElement(mobileLocator);
+
+            mobileElement.clear();
+
+        }
+    }
+
     public void clearAndType(String text) {
         if (validToRunOnWeb()) {
             if (webElement == null)

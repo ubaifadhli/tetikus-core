@@ -7,7 +7,7 @@
     <groupId>com.github.ubaifadhli</groupId>
     <artifactId>tetikus-core</artifactId>
     <packaging>jar</packaging>
-    <version>0.1.10</version>
+    <version>0.1.11</version>
 
     <name>Tetikus Test Library</name>
     <description>A test library that focuses on multiplatform parallel test.</description>
