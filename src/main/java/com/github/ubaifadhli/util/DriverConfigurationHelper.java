@@ -9,11 +9,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DriverConfigurationHelper {
-    private static final String DEFAULT_DRIVER_CONFIGURATION_PATH = "/driverconfig.json";
-
     public static List<DriverConfiguration> getDriverConfigurations() {
         ObjectMapper objectMapper = new ObjectMapper();
-        InputStream driverConfigurationsStream = DriverConfigurationHelper.class.getResourceAsStream(DEFAULT_DRIVER_CONFIGURATION_PATH);
+
+        String driverConfigurationPath = TetikusPropertiesHelper.getDriverConfigurationPath();
+
+        InputStream driverConfigurationsStream = ResourceHelper.readFileAsStream(driverConfigurationPath);
 
         try {
             return Arrays.asList(objectMapper.readValue(driverConfigurationsStream, DriverConfiguration[].class));

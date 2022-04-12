@@ -30,4 +30,8 @@ public class ThreadDriver {
     public void destroyDriver() {
         driver.quit();
     }
+
+    public void closeDriver() {
+        driver.close();
+    }
 }

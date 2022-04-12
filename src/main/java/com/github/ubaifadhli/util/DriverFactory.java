@@ -20,6 +20,9 @@ public class DriverFactory {
     public static AppiumDriver<MobileElement> createMobileDriver(DriverConfiguration driverConfiguration) {
         DesiredCapabilities desiredCapabilities = driverConfiguration.getDesiredCapabilities();
 
+        if (TetikusPropertiesHelper.isKeepDriverSession())
+            desiredCapabilities.setCapability("noReset", true);
+
         URL appiumDriverURL = URI.create(driverConfiguration.getUrl()).toURL();
         return new AndroidDriver<>(appiumDriverURL, desiredCapabilities);
     }
