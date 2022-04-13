@@ -57,15 +57,10 @@ public class CurrentThreadDriver {
             synchronized (CurrentThreadDriver.class) {
                 ThreadDriver threadDriver = DRIVER_MAP.get(getCurrentThreadID());
 
-                if (TetikusPropertiesHelper.isKeepDriverSession())
-                    threadDriver.closeDriver();
+                threadDriver.destroyDriver();
 
-                else {
-                    threadDriver.destroyDriver();
-
-                    UNASSIGNED_DRIVERS.add(threadDriver);
-                    DRIVER_MAP.remove(getCurrentThreadID());
-                }
+                UNASSIGNED_DRIVERS.add(threadDriver);
+                DRIVER_MAP.remove(getCurrentThreadID());
             }
         }
     }

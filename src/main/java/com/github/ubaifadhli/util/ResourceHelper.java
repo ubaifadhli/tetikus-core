@@ -6,7 +6,10 @@ import java.util.Properties;
 
 public class ResourceHelper {
     public static InputStream readFileAsStream(String filePath) {
-        return DriverConfigurationHelper.class.getResourceAsStream(filePath);
+        if (!filePath.startsWith("/"))
+            filePath = "/" + filePath;
+
+        return ResourceHelper.class.getResourceAsStream(filePath);
     }
 
     public static Properties readFileAsProperties(String filePath) {
