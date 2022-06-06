@@ -34,7 +34,7 @@
 
 {% block executionDetails %}
     {% for resultDetail in testResults %}
-        <div class="execution-detail">
+        <div class="execution-detail hidden">
             <ol class="relative border-l border-gray-200">
                 {% for method in resultDetail.calledMethods %}
                     <li class="mb-4 ml-4">
