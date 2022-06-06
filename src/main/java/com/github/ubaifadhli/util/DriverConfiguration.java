@@ -16,7 +16,7 @@ public class DriverConfiguration {
     private Map<String, String> desiredCapabilities = new HashMap<>();
 
     @JsonAnyGetter
-    public Map<String, String> getDesiredCapabilitiesMap() { // TODO Change into private because dev only needs it in DesiredCapabilities class.
+    private Map<String, String> getDesiredCapabilitiesMap() {
         return desiredCapabilities;
     }
 

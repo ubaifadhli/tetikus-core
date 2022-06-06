@@ -51,15 +51,17 @@ public class DriverFactory {
 
                         String browserSessionAbsolutePath = TetikusPropertiesHelper.getBrowserSessionAbsolutePath();
 
-                        File sessionPathFile = new File(browserSessionAbsolutePath);
+                        if (!browserSessionAbsolutePath.equals(TetikusPropertiesHelper.DEFAULT_SESSION_FOLDER_PATH)) {
+                            File sessionPathFile = new File(browserSessionAbsolutePath);
 
-                        if (sessionPathFile.exists() && sessionPathFile.isDirectory())
-                            log.info("Browser session folder already exists : " + browserSessionAbsolutePath);
-                        else
-                            sessionPathFile.mkdirs();
+                            if (sessionPathFile.exists() && sessionPathFile.isDirectory())
+                                log.info("Browser session folder already exists : " + browserSessionAbsolutePath);
+                            else
+                                sessionPathFile.mkdirs();
 
-                        String optionArgument = String.format("--user-data-dir=%s", browserSessionAbsolutePath);
-                        chromeOptions.addArguments(optionArgument);
+                            String optionArgument = String.format("--user-data-dir=%s", browserSessionAbsolutePath);
+                            chromeOptions.addArguments(optionArgument);
+                        }
 
                         webDriver = new ChromeDriver(chromeOptions);
 

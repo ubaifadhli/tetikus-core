@@ -5,9 +5,9 @@ import com.github.ubaifadhli.annotations.Locator;
 import com.github.ubaifadhli.annotations.MobileLocator;
 import com.github.ubaifadhli.annotations.WebLocator;
 import com.github.ubaifadhli.pages.PageObject;
+import com.github.ubaifadhli.util.Element;
 import io.appium.java_client.MobileBy;
 import org.openqa.selenium.By;
-import com.github.ubaifadhli.util.Element;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ public class TetikusInjector {
     public static void startInject(Object currentObject) {
         List<Field> currentObjectFields = Arrays.asList(currentObject.getClass().getDeclaredFields());
 
-        currentObjectFields.forEach(field -> {
+        for (Field field : currentObjectFields) {
             if (field.getType().getSuperclass() == PageObject.class) {
                 BaseURL baseURL = field.getType().getAnnotation(BaseURL.class);
 
@@ -136,6 +136,6 @@ public class TetikusInjector {
                     // Error : Element does not have locator.
                 }
             }
-        });
+        }
     }
 }

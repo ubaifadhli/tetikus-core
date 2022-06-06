@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Log
 public class CurrentThreadDriver {
-    private static ConcurrentHashMap<Long, ThreadDriver> DRIVER_MAP;
+    private static ConcurrentHashMap<Long, ThreadDriver> DRIVER_MAP = new ConcurrentHashMap<>();
     private static List<ThreadDriver> UNASSIGNED_DRIVERS;
 
     public static ThreadDriver getCurrentInstance() {
@@ -67,7 +67,6 @@ public class CurrentThreadDriver {
 
     // No need for synchronization because in this phase the runner still runs as single thread.
     public static void readConfigurations(List<DriverConfiguration> driverConfigurations) {
-        DRIVER_MAP = new ConcurrentHashMap<>();
         UNASSIGNED_DRIVERS = new ArrayList<>();
 
         driverConfigurations.stream()

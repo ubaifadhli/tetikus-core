@@ -13,8 +13,8 @@ public class TetikusPropertiesHelper {
     private static final String REPORT_ENABLED = "report.enabled";
 
     // Default value for several properties.
-    private static final String DEFAULT_DRIVER_CONFIGURATION_PATH = "driverconfig.json";
-    private static final String DEFAULT_SESSION_FOLDER_PATH = "target/browser-session/chrome-cache-dir";
+    public static final String DEFAULT_DRIVER_CONFIGURATION_PATH = "driverconfig.json";
+    public static final String DEFAULT_SESSION_FOLDER_PATH = "target/browser-session/chrome-cache-dir";
 
     private static Properties getTetikusProperties() {
         return ResourceHelper.readFileAsProperties(TETIKUS_PROPERTIES_PATH);

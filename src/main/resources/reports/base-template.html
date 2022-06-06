@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tetikus Report</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50">
+    <div class="fixed bg-sky-900 p-4 h-full">
+        <img src="placeholder.svg" alt="Tetikus Logo" class="w-10" >
+    </div>
+
+    <div class="ml-20 p-4 py-6">
+        <p class="text-4xl font-bold py-1">Tetikus Report</p>
+        <p class="text-lg py-1">Executed on {% block testStartDate %}{% endblock %}</p>
+        <p class="text-lg">Ran for {% block testDuration %}{% endblock %}</p>
+
+        <div class="flex flex-row gap-8 py-8 max-h-screen">
+            <div class="basis-1/4 bg-white rounded-lg p-4 overflow-x-auto">
+                <p class="text-xl font-bold mb-4">Test Scenario</p>
+
+                <ul class="scenario-list">
+                    {% block scenarioLists %}{% endblock %}
+                </ul>
+
+            </div>
+
+            <div class="basis-3/4 bg-white rounded-lg p-4 overflow-x-auto">
+                <p class="text-xl font-bold mb-4">Execution Detail</p>
+
+                {% block executionDetails %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        const SCENARIO_BUTTONS = "ul.scenario-list > li"
+        const DETAIL_SECTIONS = "div.execution-detail"
+
+        const CURRENTLY_DISPLAYED_DETAIL_SECTION = DETAIL_SECTIONS + ":not(.hidden)"
+
+        let scenarioButtons = document.querySelectorAll(SCENARIO_BUTTONS)
+
+        scenarioButtons.forEach((element, index) => {
+            element.addEventListener("click", () => {
+                let previouslyDisplayedSection = document.querySelector(CURRENTLY_DISPLAYED_DETAIL_SECTION)
+
+                // Handling when no execution detail is currently displayed.
+                if (previouslyDisplayedSection)
+                    previouslyDisplayedSection.classList.add("hidden")
+
+                let currentlyDisplayedSection = document.querySelectorAll(DETAIL_SECTIONS).item(index)
+
+                currentlyDisplayedSection.classList.remove("hidden")
+            })
+        })
+    </script>
+</body>
+</html>
