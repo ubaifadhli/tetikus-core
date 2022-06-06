@@ -8,9 +8,13 @@ import com.github.ubaifadhli.reports.TestResult;
 import javassist.*;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
+import lombok.SneakyThrows;
 import org.testng.IInvokedMethod;
 import org.testng.ISuite;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -23,6 +27,7 @@ import java.util.stream.Collectors;
 public class ReportingHelper {
     public static String DEFAULT_REPORTING_DIRECTORY = "target/tetikus-report/";
     private static String BASE_RUNNER_NAME = "TetikusCoreRunner";
+    private static String PLACEHOLDER_LOGO_FILENAME = "placeholder.svg";
 
     public static ReportDetail convertToTestResults(List<ISuite> suites) {
         long startMiilis = -1;
@@ -67,29 +72,43 @@ public class ReportingHelper {
                 .build();
     }
 
+    @SneakyThrows
     public static void generateReport(ReportDetail reportDetail) {
         Map<String, Object> dataMap = new HashMap<>();
 
         String startDate = ZonedDateTime.ofInstant(
                 Instant.ofEpochMilli(reportDetail.getStartMillis()), ZoneOffset.of("+07:00")
-        ).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
+        ).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
 
         Duration testDuration = Duration.between(
                 Instant.ofEpochMilli(reportDetail.getStartMillis()),
                 Instant.ofEpochMilli(reportDetail.getEndMillis())
         );
 
-        // Handle minutes seconds stuff
+        long testDurationMinutes = testDuration.getSeconds() / 60;
+        long testDurationRemainingSeconds = testDuration.getSeconds() % 60;
 
-        String testDurationInMinutesAndSeconds =
-                testDuration.getSeconds() / 60 + " minutes " +
-                        testDuration.getSeconds() % 60 + " seconds";
+        StringBuilder testDurationInMinutesAndSeconds = new StringBuilder();
+
+        if (testDurationMinutes > 0)
+            testDurationInMinutesAndSeconds.append(testDurationMinutes)
+                    .append(" minutes ");
+
+        if (testDurationRemainingSeconds > 0)
+            testDurationInMinutesAndSeconds.append(testDurationRemainingSeconds)
+                    .append(" seconds");
 
         dataMap.put("testStartDate", startDate);
         dataMap.put("testDuration", testDurationInMinutesAndSeconds);
         dataMap.put("testResults", reportDetail.getTestResults());
 
         TemplateEngine.generateWebpage(dataMap);
+
+        Files.copy(
+                ReportingHelper.class.getClassLoader().getResourceAsStream("reports/" + PLACEHOLDER_LOGO_FILENAME),
+                new File(ReportingHelper.DEFAULT_REPORTING_DIRECTORY + PLACEHOLDER_LOGO_FILENAME).toPath(),
+                StandardCopyOption.REPLACE_EXISTING
+        );
     }
 
     public static List<String> getCalledMethodsByMethodName(String methodName) {

@@ -1,4 +1,4 @@
-{% extends "base-template.html" %}
+{% extends "reports/base-template.html" %}
 
 {% block testStartDate %}{{ testStartDate }}{% endblock %}
 {% block testDuration %}{{ testDuration }}{% endblock %}
@@ -8,7 +8,9 @@
         <li class="p-3 hover:bg-slate-100 hover:rounded-lg cursor-pointer">
             <div class="flex items-center space-x-4">
                 <div class="flex-shrink-0 bg-slate-800 py-2 w-10 rounded-full">
-                    <p class="text-white font-bold text-center">1</p>
+                    <p class="text-white font-bold text-center">
+                        {{ loop.index + 1 }}
+                    </p>
                 </div>
                 <div class="flex-1 min-w-0">
                     <p class="font-medium text-gray-900 truncate">
@@ -42,13 +44,13 @@
                 {% endfor %}
             </ol>
 
-            {% if result.isSuccess is false %}
-            <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+            {% if result.errorThrown is not empty %}
+            <div class="p-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
                 <span>{{ resultDetail.errorThrown }}</span>
             </div>
             {% endif %}
 
-            <img src="{{ resultDetail.screenshotFileName }}" alt="Platform screenshot" class="max-h-72 rounded-lg">
+            <img src="{{ resultDetail.screenshotFileName }}" alt="Platform screenshot" class="max-h-72 mt-4 rounded-lg">
         </div>
     {% endfor %}
 {% endblock %}

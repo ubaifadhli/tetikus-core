@@ -26,6 +26,7 @@
         <lombok.version>1.18.20</lombok.version>
         <jackson.version>2.13.0</jackson.version>
         <javassist.version>3.29.0-GA</javassist.version>
+        <pebbletemplates.version>3.1.5</pebbletemplates.version>
     </properties>
 
     <dependencies>
@@ -78,6 +79,13 @@
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
             <version>${javassist.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.pebbletemplates/pebble -->
+        <dependency>
+            <groupId>io.pebbletemplates</groupId>
+            <artifactId>pebble</artifactId>
+            <version>${pebbletemplates.version}</version>
         </dependency>
 
     </dependencies>

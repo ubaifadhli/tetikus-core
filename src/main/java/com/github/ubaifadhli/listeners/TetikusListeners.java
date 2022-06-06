@@ -22,8 +22,6 @@ public class TetikusListeners implements ISuiteListener, IInvokedMethodListener,
         // Configuring how many threads that can be run in parallel.
         suite.getXmlSuite().setThreadCount(driverConfigurationsCount);
 
-        System.out.println("driver count : " + driverConfigurationsCount);
-
         // Configuring invocation count so that it can run both mobile and web test in parallel.
         for (ITestNGMethod method : suite.getAllMethods()) {
             method.setInvocationCount(driverConfigurationsCount);
@@ -54,8 +52,7 @@ public class TetikusListeners implements ISuiteListener, IInvokedMethodListener,
     public void generateReport(List<XmlSuite> xmlSuites, List<ISuite> suites, String outputDirectory) {
         if (TetikusPropertiesHelper.isReportEnabled()) {
             ReportDetail testResults = ReportingHelper.convertToTestResults(suites);
-            System.out.println(testResults);
-//            ReportingHelper.generateReport(testResults);
+            ReportingHelper.generateReport(testResults);
 
         } else
             log.info("Report is currently configured to be disabled. Report would not be generated.");
