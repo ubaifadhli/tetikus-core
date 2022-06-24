@@ -10,8 +10,6 @@ import java.util.List;
 
 @Slf4j
 public class TetikusListeners implements ISuiteListener, IInvokedMethodListener, IReporter {
-
-
     @Override
     public void onStart(ISuite suite) {
         int driverConfigurationsCount = DriverConfigurationHelper.getDriverConfigurationsCount();
