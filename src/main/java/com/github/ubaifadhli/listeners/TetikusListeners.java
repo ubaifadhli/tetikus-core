@@ -48,7 +48,7 @@ public class TetikusListeners implements ISuiteListener, IInvokedMethodListener,
 
     @Override
     public void generateReport(List<XmlSuite> xmlSuites, List<ISuite> suites, String outputDirectory) {
-        if (TetikusPropertiesHelper.isReportEnabled()) {
+        if (PropertiesHelper.isReportEnabled()) {
             ReportDetail testResults = ReportingHelper.convertToTestResults(suites);
             ReportingHelper.generateReport(testResults);
 

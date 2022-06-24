@@ -3,7 +3,7 @@ package com.github.ubaifadhli.util;
 import java.io.File;
 import java.util.Properties;
 
-public class TetikusPropertiesHelper {
+public class PropertiesHelper {
     private static final String TETIKUS_PROPERTIES_PATH = "tetikus.properties";
 
     // Properties variable.

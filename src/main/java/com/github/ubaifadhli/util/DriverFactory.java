@@ -25,7 +25,7 @@ public class DriverFactory {
     public static AppiumDriver<MobileElement> createMobileDriver(DriverConfiguration driverConfiguration) {
         DesiredCapabilities desiredCapabilities = driverConfiguration.getDesiredCapabilities();
 
-        if (TetikusPropertiesHelper.isKeepDriverSession())
+        if (PropertiesHelper.isKeepDriverSession())
             desiredCapabilities.setCapability("noReset", true);
 
         URL appiumDriverURL = URI.create(driverConfiguration.getUrl()).toURL();
@@ -49,9 +49,9 @@ public class DriverFactory {
                     case CHROME:
                         ChromeOptions chromeOptions = new ChromeOptions();
 
-                        String browserSessionAbsolutePath = TetikusPropertiesHelper.getBrowserSessionAbsolutePath();
+                        String browserSessionAbsolutePath = PropertiesHelper.getBrowserSessionAbsolutePath();
 
-                        if (!browserSessionAbsolutePath.equals(TetikusPropertiesHelper.DEFAULT_SESSION_FOLDER_PATH)) {
+                        if (!browserSessionAbsolutePath.equals(PropertiesHelper.DEFAULT_SESSION_FOLDER_PATH)) {
                             File sessionPathFile = new File(browserSessionAbsolutePath);
 
                             if (sessionPathFile.exists() && sessionPathFile.isDirectory())

@@ -12,7 +12,7 @@ public class DriverConfigurationHelper {
     public static List<DriverConfiguration> getDriverConfigurations() {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String driverConfigurationPath = TetikusPropertiesHelper.getDriverConfigurationPath();
+        String driverConfigurationPath = PropertiesHelper.getDriverConfigurationPath();
 
         InputStream driverConfigurationsStream = ResourceHelper.readFileAsStream(driverConfigurationPath);
 
