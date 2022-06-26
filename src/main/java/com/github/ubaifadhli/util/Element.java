@@ -38,12 +38,20 @@ public class Element {
         return (MobileElement) getMobileDriver().findElement(mobileLocator);
     }
 
-    private List<WebElement> asElements() {
+    public List<WebElement> asElements() {
         if (validToRunOnWeb())
             return getWebDriver().findElements(webLocator);
 
         else
             return getMobileDriver().findElements(mobileLocator);
+    }
+
+    public WebElement asWebElement() {
+        return getWebElement();
+    }
+
+    public MobileElement asMobileElement() {
+        return getMobileElement();
     }
 
     public void click() {
