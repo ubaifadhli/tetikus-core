@@ -12,7 +12,7 @@ public class TestResult {
     private String testName;
     private PlatformConstant platform;
     private boolean isSuccess;
-    private Throwable errorThrown;
+    private String errorThrown;
     private List<String> calledMethods;
     private String screenshotFileName;
 }

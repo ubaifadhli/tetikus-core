@@ -99,21 +99,27 @@ public class Element {
     }
 
     public Element waitUntilClickable() {
-        By currentLocator = validToRunOnWeb() ? webLocator : mobileLocator;
-        WebDriver currentDriver = validToRunOnWeb() ? getWebDriver() : getMobileDriver();
+        if (validToRunOnWeb()) {
+            WebDriverWait webDriverWait = new WebDriverWait(getWebDriver(), DEFAULT_WAIT_DURATION);
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(webLocator));
 
-        WebDriverWait webDriverWait = new WebDriverWait(currentDriver, DEFAULT_WAIT_DURATION);
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(currentLocator));
+        } else if (validToRunOnMobile()) {
+            WebDriverWait webDriverWait = new WebDriverWait(getMobileDriver(), DEFAULT_WAIT_DURATION);
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(mobileLocator));
+        }
 
         return this;
     }
 
     public Element waitUntilVisible() {
-        By currentLocator = validToRunOnWeb() ? webLocator : mobileLocator;
-        WebDriver currentDriver = validToRunOnWeb() ? getWebDriver() : getMobileDriver();
+        if (validToRunOnWeb()) {
+            WebDriverWait webDriverWait = new WebDriverWait(getWebDriver(), DEFAULT_WAIT_DURATION);
+            webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(webLocator));
 
-        WebDriverWait webDriverWait = new WebDriverWait(currentDriver, DEFAULT_WAIT_DURATION);
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(currentLocator));
+        } else if (validToRunOnMobile()) {
+            WebDriverWait webDriverWait = new WebDriverWait(getMobileDriver(), DEFAULT_WAIT_DURATION);
+            webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(mobileLocator));
+        }
 
         return this;
     }

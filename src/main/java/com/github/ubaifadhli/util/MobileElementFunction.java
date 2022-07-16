@@ -37,6 +37,10 @@ public class MobileElementFunction {
                 .perform();
     }
 
+    public boolean isKeyboardShown() {
+        return ((AndroidDriver) driver).isKeyboardShown();
+    }
+
     public void swipe(int swipeUpPercentage, SwipeDirection swipeDirection) {
         int deviceMiddleY = driver.manage().window().getSize().getHeight() / 2;
         int deviceMiddleX = driver.manage().window().getSize().getWidth() / 2;

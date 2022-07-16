@@ -2,6 +2,7 @@ package com.github.ubaifadhli.util;
 
 import com.github.ubaifadhli.constants.PlatformConstant;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidDriver;
 import lombok.extern.java.Log;
 import org.openqa.selenium.WebDriver;
 
@@ -28,6 +29,10 @@ public class CurrentThreadDriver {
 
     public static AppiumDriver getMobileDriver() {
         return (AppiumDriver) getWebDriver();
+    }
+
+    public static AndroidDriver getAndroidDriver() {
+        return (AndroidDriver) getMobileDriver();
     }
 
     public static void initializeDriverForCurrentThread() {

@@ -44,7 +44,7 @@
                 {% endfor %}
             </ol>
 
-            {% if result.errorThrown is not empty %}
+            {% if resultDetail.errorThrown is not empty %}
             <div class="p-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
                 <span>{{ resultDetail.errorThrown }}</span>
             </div>

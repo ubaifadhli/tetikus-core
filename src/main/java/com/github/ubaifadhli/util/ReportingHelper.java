@@ -13,6 +13,8 @@ import org.testng.IInvokedMethod;
 import org.testng.ISuite;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.Duration;
@@ -53,11 +55,13 @@ public class ReportingHelper {
             startMiilis = startMiilis < 0 ? currentStartMillis : Math.min(startMiilis, currentStartMillis);
             endMillis = endMillis < 0 ? currentEndMillis : Math.max(endMillis, currentEndMillis);
 
+
+
             TestResult testResult = TestResult.builder()
                     .testName(methodName)
                     .isSuccess(isSuccess)
                     .platform(platform)
-                    .errorThrown(thrownError)
+                    .errorThrown(thrownError != null ? getStackTraceAsString(thrownError) : null)
                     .calledMethods(ReportingHelper.getCalledMethodsByMethodName(methodName))
                     .screenshotFileName(ScreenshotHelper.getScreenshotName(methodID))
                     .build();
@@ -70,6 +74,14 @@ public class ReportingHelper {
                 .startMillis(startMiilis)
                 .endMillis(endMillis)
                 .build();
+    }
+
+    private static String getStackTraceAsString(Throwable errorThrown) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+
+        errorThrown.printStackTrace(printWriter);
+        return stringWriter.toString();
     }
 
     @SneakyThrows

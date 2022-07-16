@@ -25,8 +25,10 @@ public class PageObject {
      * Opens website of related PageObject using value of {@link PageObject#baseURL}. Only used for Web platform.
      */
     public void openPage() {
-        if (isCurrentPlatformWeb())
+        if (isCurrentPlatformWeb()) {
+            getWebDriver().manage().window().maximize();
             getWebDriver().get(baseURL);
+        }
         else
             log.debug("openPage method is not executed because it currently runs at Mobile.");
 
